@@ -23,6 +23,54 @@ class Entity
 
 };
 
+class Wall : public Entity
+{
+	public:
+		Wall()
+		{
+			body.setFillColor(sf::Color::Red);
+		}
+
+		void setPosition(int x, int y)
+		{
+			body.setPosition(x,y);
+		}
+
+		void setSize(int w, int h)
+		{
+			width = w;
+			height = h;
+			body.setSize(sf::Vector2f(w,h));
+		}
+
+		void setParameters(int x, int y, int w, int h)
+		{
+			setPosition(x,y);
+			setSize(w,h);
+		}
+
+		sf::RectangleShape getBody()
+		{
+			return body;
+		}
+
+		int getWidth()
+		{
+			return width;
+		}
+
+		int getHeight()
+		{
+			return height;
+		}
+
+	private:
+		sf::RectangleShape body;
+		int width;
+		int height;
+
+};
+
 class Zone : public Entity
 {
 	public:
@@ -50,7 +98,7 @@ class Player : public Entity
 		Player()
 		{
 			body.setRadius(10.f);
-			body.setPosition(640.f/2.f, 480.f/2.f);
+			body.setPosition(16, 200);
 			body.setFillColor(sf::Color::Cyan);
 			movingUp = false;
 			movingDown = false;
@@ -118,16 +166,84 @@ class Player : public Entity
 
 };
 
-class Game 
+class Enemy : public Entity
 {
 	public:
-		Game() : window(sf::VideoMode(640,480), "Prototype")
-		, player()
-		, zone()
+		Enemy()
 		{
-			//sf::View view;
-			//view.setViewport(sf::FloatRect(0,0,48.f/64.f,1.f));
-			//window.setView(view);
+			body = sf::CircleShape(30,12);
+			body.setFillColor(sf::Color(255,255,255,180));
+			movingRight = true;
+		}
+
+		void move(sf::Vector2f movement)
+		{
+			body.move(movement);
+		}
+
+		void setPosition(int x, int y)
+		{
+			body.setPosition(x,y);
+		}
+
+		void setMovingRight(bool k)
+		{
+			movingRight = k;
+		}
+
+		bool getMovingRight()
+		{
+			return movingRight;
+		}
+
+		sf::CircleShape getBody()
+		{
+			return body;
+		}
+
+	private:
+		sf::CircleShape body;
+		bool movingRight;
+
+};
+
+class Game 
+{
+	Wall wall0;
+	Wall wall1;
+	Wall wall2;
+	std::vector<Wall> walls;
+	Enemy enemy1;
+	sf::Font font;
+	
+	public:
+		Game() : window(
+					sf::VideoMode(640,480)
+					,"Prototype"
+					,sf::Style::Default
+					,sf::ContextSettings(0,0,4)
+					)
+				, player()
+				, zone()
+		{
+			gameOver = false;
+
+			if (!font.loadFromFile("OpenSans.ttf")) { /* Nothing */}
+			gameOverText.setString("Game Over! Press Esc to Leave");
+			gameOverText.setFont(font);
+			gameOverText.setCharacterSize(30);
+			gameOverText.setPosition(100,200);
+			gameOverText.setColor(sf::Color::Red);
+
+			
+			wall0.setParameters(400,200,200,100);
+			wall1.setParameters(40,300,30,75);
+			wall2.setParameters(37,81,51,32);
+			walls.push_back(wall0);
+			walls.push_back(wall1);
+			walls.push_back(wall2);
+
+			enemy1.setPosition(200,100);
 		}
 
 		void run()
@@ -152,7 +268,8 @@ class Game
 		sf::RenderWindow window;
 		Player player;
 		Zone zone;
-		sf::View view;
+		bool gameOver;
+		sf::Text gameOverText;
 
 		void processEvents()
 		{
@@ -230,16 +347,105 @@ class Game
 			}
 
 			player.move(movement * deltaTime.asSeconds());
-			//view.move(movement * deltaTime.asSeconds());
-			//window.setView(view);
+
+			sf::Vector2f correctMove(0.f,0.f);
+			if (player.getBody().getPosition().x < zone.getBody().getPosition().x ||
+				player.getBody().getPosition().x > zone.getBody().getPosition().x + 600)
+			{
+				correctMove.x = -1 * movement.x * deltaTime.asSeconds();
+			}
+			if (player.getBody().getPosition().y < zone.getBody().getPosition().y ||
+				player.getBody().getPosition().y > zone.getBody().getPosition().y + 380)
+			{
+				correctMove.y = -1 * movement.y * deltaTime.asSeconds();
+			}
+
+			for(std::vector<Wall>::iterator it = walls.begin(); it != walls.end(); it++)
+			{
+				if(player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
+					player.getBody().getPosition().y < it->getBody().getPosition().y + it->getHeight())
+				{
+					if(player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
+						player.getBody().getPosition().x < it->getBody().getPosition().x + it->getWidth())
+					{
+						correctMove.x = -1 * movement.x * deltaTime.asSeconds();
+					}
+				}
+
+				if (player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
+					player.getBody().getPosition().x < it->getBody().getPosition().x + it->getWidth())
+				{
+					if (player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
+						player.getBody().getPosition().y < it->getBody().getPosition().y + it->getHeight())
+					{
+						correctMove.y = -1 * movement.y * deltaTime.asSeconds();
+					}
+				}
+			}
+
+			player.move(correctMove);
+
+			sf::Vector2f enemyMovement(0.f,0.f);
+			if (enemy1.getBody().getPosition().x > 400)
+			{
+				enemy1.setMovingRight(false);
+			}
+			if (enemy1.getBody().getPosition().x < 160)
+			{
+				enemy1.setMovingRight(true);
+			}
+			if (enemy1.getMovingRight())
+			{
+				enemy1.setVelocity(enemyMovement.x + 50.f, enemyMovement.y);
+				enemyMovement = enemy1.getVelocity();
+
+			}
+			if (!enemy1.getMovingRight())
+			{
+				enemy1.setVelocity(enemyMovement.x - 50.f, enemyMovement.y);
+				enemyMovement = enemy1.getVelocity();
+			}
+
+			enemy1.move(enemyMovement * deltaTime.asSeconds());
+
+			if (player.getBody().getPosition().y + 20 > enemy1.getBody().getPosition().y &&
+				player.getBody().getPosition().y < enemy1.getBody().getPosition().y + 30)
+			{
+				if (player.getBody().getPosition().x + 20 > enemy1.getBody().getPosition().x &&
+					player.getBody().getPosition().x < enemy1.getBody().getPosition().x + 30)
+				{
+					gameOver = true;
+				}
+			}
+			if (player.getBody().getPosition().x + 20 > enemy1.getBody().getPosition().x &&
+				player.getBody().getPosition().x < enemy1.getBody().getPosition().x + 30)
+			{
+				if (player.getBody().getPosition().y + 20 > enemy1.getBody().getPosition().y &&
+					player.getBody().getPosition().y < enemy1.getBody().getPosition().y + 30)
+				{
+					gameOver = true;
+				}
+			}
 
 		}
 
 		void render()
 		{
 			window.clear();
-			window.draw(zone.getBody());
-			window.draw(player.getBody());
+			if(!gameOver)
+			{
+				window.draw(zone.getBody());
+				for(std::vector<Wall>::iterator it = walls.begin(); it != walls.end(); it++)
+				{
+					window.draw(it->getBody());
+				}
+				window.draw(player.getBody());
+				window.draw(enemy1.getBody());
+			}
+			if(gameOver)
+			{
+				window.draw(gameOverText);
+			}
 			window.display();
 		}
 

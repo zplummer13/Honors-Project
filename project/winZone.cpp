@@ -5,7 +5,7 @@
 WinZone::WinZone()
 {
 	body.setFillColor(sf::Color(0,90,180,255));
-	setParameters(610,200,20,20);
+	setParameters(620,200,10,20);
 }
 
 void WinZone::setPosition(int x, int y)

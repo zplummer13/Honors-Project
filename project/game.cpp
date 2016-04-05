@@ -16,23 +16,30 @@ Game::Game() : window(
 			,sf::Style::Default
 			,sf::ContextSettings(0,0,4)
 			)
-		, player()
 		, zone()
 {
 	gameOver = false;
+	wonLevel = false;
 
 	if (!font.loadFromFile("OpenSans.ttf")) { /* Nothing */}
-	gameOverText.setString("Game Over! Press Esc to Leave");
+	gameOverText.setString("Game Over!\nPress Return to Restart");
 	gameOverText.setFont(font);
 	gameOverText.setCharacterSize(30);
 	gameOverText.setPosition(100,200);
 	gameOverText.setColor(sf::Color::Red);
+	wonLevelText.setString("Level Complete!\nPress Return to Continue");
+	wonLevelText.setFont(font);
+	wonLevelText.setCharacterSize(30);
+	wonLevelText.setPosition(100,200);
+	wonLevelText.setColor(sf::Color::Red);
 
 	level.initiate();
+	player = level.getPlayer();
 	walls = level.getWalls();
 	enemies = level.getEnemies();
 	doors = level.getDoors();
 	buttons = level.getButtons();
+	lights = level.getLights();
 	winZone = level.getWinZone();
 }
 
@@ -86,30 +93,70 @@ void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 		window.close();
 	}
 
-	if (key == sf::Keyboard::W)
+	if (!gameOver && !wonLevel)
 	{
-		player.setMovingUp(isPressed);
-	}
+		if (key == sf::Keyboard::W)
+		{
+			player.setMovingUp(isPressed);
+		}
 
-	if (key == sf::Keyboard::S)
-	{
-		player.setMovingDown(isPressed);
-	}
+		if (key == sf::Keyboard::S)
+		{
+			player.setMovingDown(isPressed);
+		}
 
-	if (key == sf::Keyboard::A)
-	{
-		player.setMovingLeft(isPressed);
-	}
+		if (key == sf::Keyboard::A)
+		{
+			player.setMovingLeft(isPressed);
+		}
 
-	if (key == sf::Keyboard::D)
+		if (key == sf::Keyboard::D)
+		{
+			player.setMovingRight(isPressed);
+		}
+
+		if (key == sf::Keyboard::Space)
+		{
+			player.swap();
+		}
+	}
+	else if (gameOver)
 	{
-		player.setMovingRight(isPressed);
+		if (key == sf::Keyboard::Return)
+		{
+			gameOver = false;
+			level.initiate();
+			player = level.getPlayer();
+			walls = level.getWalls();
+			enemies = level.getEnemies();
+			doors = level.getDoors();
+			buttons = level.getButtons();
+			lights = level.getLights();
+			winZone = level.getWinZone();
+		}
+	}
+	else
+	{
+		if (key == sf::Keyboard::Return)
+		{
+			wonLevel = false;
+			level.win();
+			level.initiate();
+			player = level.getPlayer();
+			walls = level.getWalls();
+			enemies = level.getEnemies();
+			doors = level.getDoors();
+			buttons = level.getButtons();
+			lights = level.getLights();
+			winZone = level.getWinZone();
+		}
 	}
 
 }
 
 void Game::update(sf::Time deltaTime)
 {
+	player.advanceCooldowns();
 	sf::Vector2f movement(0.f,0.f);
 	if (player.isMovingUp())
 	{
@@ -227,30 +274,39 @@ void Game::update(sf::Time deltaTime)
 		}
 	}
 
+	for(std::vector<Light>::iterator it = lights.begin(); it != lights.end(); it++)
+	{
+		if(player.isInLight())
+		{
+			if (player.getBody().getPosition().y + 20 < it->getBody().getPosition().y ||
+				player.getBody().getPosition().y > it->getBody().getPosition().y + it->getHeight())
+			{
+				player.setInLight(false);
+			}
+			if (player.getBody().getPosition().x + 20 < it->getBody().getPosition().x ||
+				player.getBody().getPosition().x > it->getBody().getPosition().x + it->getWidth())
+			{
+				player.setInLight(false);
+			}
+		}
+		else
+		{
+			if (player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
+				player.getBody().getPosition().y < it->getBody().getPosition().y + it->getHeight())
+			{
+				if (player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
+					player.getBody().getPosition().x < it->getBody().getPosition().x + it->getWidth())
+				{
+					player.setInLight(true);
+				}
+			}
+		}
+	}
+
 	for(std::vector<Enemy>::iterator it = enemies.begin(); it != enemies.end(); it++)
 	{
-		sf::Vector2f enemyMovement(0.f,0.f);
-		if (it->getBody().getPosition().x > 400)
-		{
-			it->setMovingRight(false);
-		}
-		if (it->getBody().getPosition().x < 160)
-		{
-			it->setMovingRight(true);
-		}
-		if (it->getMovingRight())
-		{
-			it->setVelocity(enemyMovement.x + 50.f, enemyMovement.y);
-			enemyMovement = it->getVelocity();
-
-		}
-		if (!it->getMovingRight())
-		{
-			it->setVelocity(enemyMovement.x - 50.f, enemyMovement.y);
-			enemyMovement = it->getVelocity();
-		}
-
-		it->move(enemyMovement * deltaTime.asSeconds());
+		it->script(player);
+		it->update(deltaTime);
 
 		if (player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
 			player.getBody().getPosition().y < it->getBody().getPosition().y + 55)
@@ -270,8 +326,8 @@ void Game::update(sf::Time deltaTime)
 				gameOver = true;
 			}
 		}
-
-		if (player.getBody().getPosition().y + 20 > winZone.getBody().getPosition().y &&
+	}
+	if (player.getBody().getPosition().y + 20 > winZone.getBody().getPosition().y &&
 			player.getBody().getPosition().y < winZone.getBody().getPosition().y + winZone.getHeight())
 		{
 			if (player.getBody().getPosition().x + 20 > winZone.getBody().getPosition().x &&
@@ -279,23 +335,16 @@ void Game::update(sf::Time deltaTime)
 			{
 				if (level.getStage() == 0)
 				{
-					level.win();
-					level.initiate();
-					walls = level.getWalls();
-					//enemies = level.getEnemies();
-					doors = level.getDoors();
-					buttons = level.getButtons();
-					winZone = level.getWinZone();
+					wonLevel = true;
 				}
 			}
 		}
-	}
 }
 
 void Game::render()
 {
 	window.clear();
-	if(!gameOver)
+	if(!gameOver && !wonLevel)
 	{
 		window.draw(zone.getBody());
 		for(std::vector<Wall>::iterator it = walls.begin(); it != walls.end(); it++)
@@ -310,7 +359,13 @@ void Game::render()
 		{
 			window.draw(it->getBody());
 		}
+		for(std::vector<Light>::iterator it = lights.begin(); it != lights.end(); it++)
+		{
+			window.draw(it->getBody());
+		}
 		window.draw(winZone.getBody());
+		window.draw(player.getShadow());
+		window.draw(player.getShadowBar());
 		window.draw(player.getBody());
 		for(std::vector<Enemy>::iterator it = enemies.begin(); it != enemies.end(); it++)
 		{
@@ -320,6 +375,10 @@ void Game::render()
 	if(gameOver)
 	{
 		window.draw(gameOverText);
+	}
+	if(wonLevel)
+	{
+		window.draw(wonLevelText);
 	}
 	window.display();
 }

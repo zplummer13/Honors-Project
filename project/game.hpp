@@ -9,6 +9,7 @@
 #include "door.hpp"
 #include "doorButton.hpp"
 #include "enemy.hpp"
+#include "light.hpp"
 #include "winZone.hpp"
 
 class Game 
@@ -19,27 +20,19 @@ class Game
 
 	private:
 		sf::RenderWindow window;
-		Player player;
-		Zone zone;
 		bool gameOver;
 		sf::Text gameOverText;
-
-		/*
-		Wall wall0;
-		Wall wall1;
-		Wall wall2;
-		Door door1;
-		Door door2;
-		DoorButton button1;
-		Door* doorptr1;
-		Door* doorptr2;
-		Enemy enemy1;
-		*/
+		bool wonLevel;
+		sf::Text wonLevelText;
+		Player player;
+		Zone zone;
+		
 		Level level;
 		std::vector<Wall> walls;
 		std::vector<Enemy> enemies;
 		std::vector<Door> doors;
 		std::vector<DoorButton> buttons;
+		std::vector<Light> lights;
 		WinZone winZone;
 		sf::Font font;
 

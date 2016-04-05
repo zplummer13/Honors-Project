@@ -22,6 +22,7 @@ void Level::initiate()
 		it->removeLinks();
 	}
 	buttons.clear();
+	lights.clear();
 	
 	if (stage == 0)
 	{
@@ -37,6 +38,15 @@ void Level::initiate()
 
 		Enemy enemy0;
 		enemy0.setPosition(200,100);
+		enemy0.setHome(200,100);
+		enemy0.setTarget(250,300);
+		enemy0.setState(1);
+		enemy0.addEdge(1,3);
+		enemy0.addEdge(3,1);
+		enemy0.addEdge(1,2);
+		enemy0.addEdge(3,2);
+		enemy0.addEdge(2,3);
+		enemy0.addEdge(2,2);
 		enemies.push_back(enemy0);
 
 		Door door0;
@@ -52,12 +62,19 @@ void Level::initiate()
 		button1.addLinks(doors);
 		buttons.push_back(button1);
 
+		Light light1;
+		light1.setParameters(400,30,40,40);
+		lights.push_back(light1);
+
 	}
 	else if (stage == 1)
 	{
 		Wall wall0;
+		Wall wall1;
 		wall0.setParameters(70,100,30,75);
+		wall1.setParameters(200,300,30,10);
 		walls.push_back(wall0);
+		walls.push_back(wall1);
 
 		Door door0;
 		door0.setParameters(400,100,50,50);
@@ -86,6 +103,11 @@ int Level::getStage()
 	return stage;
 }
 
+Player Level::getPlayer()
+{
+	return player;
+}
+
 std::vector<Wall> Level::getWalls()
 {
 	return walls;
@@ -104,6 +126,11 @@ std::vector<Door> Level::getDoors()
 std::vector<DoorButton> Level::getButtons()
 {
 	return buttons;
+}
+
+std::vector<Light> Level::getLights()
+{
+	return lights;
 }
 
 WinZone Level::getWinZone()

@@ -8,6 +8,7 @@
 #include "door.hpp"
 #include "doorButton.hpp"
 #include "winZone.hpp"
+#include "light.hpp"
 
 class Level
 {
@@ -18,18 +19,22 @@ class Level
 
 		void setStage(int z);
 		int getStage();
+		Player getPlayer();
 		std::vector<Wall> getWalls();
 		std::vector<Enemy> getEnemies();
 		std::vector<Door> getDoors();
 		std::vector<DoorButton> getButtons();
+		std::vector<Light> getLights();
 		WinZone getWinZone();
 
 	private:
 		int stage;
+		Player player;
 		std::vector<Wall> walls;
 		std::vector<Enemy> enemies;
 		std::vector<Door> doors;
 		std::vector<DoorButton> buttons;
+		std::vector<Light> lights;
 		WinZone winZone;
 };
 

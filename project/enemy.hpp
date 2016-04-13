@@ -20,9 +20,12 @@ class Enemy : public Entity
 		void update(sf::Time deltaTime);
 		void setHome(int x, int y);
 		void setTarget(int x, int y);
+		void setSpeed(float velocity);
 		sf::Vector2f getHome();
 		sf::Vector2f getTarget();
 		bool checkPositions(sf::Vector2f v1, sf::Vector2f v2);
+		void setPatrolParameters();
+		void setStandingParameters();
 
 	private:
 		sf::CircleShape body;

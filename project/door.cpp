@@ -1,12 +1,14 @@
 #include <SFML/Graphics.hpp>
 #include "door.hpp"
 
-static sf::Color closed = sf::Color(150,0,100,255);
-static sf::Color opened = sf::Color(150,0,100,80);
+static sf::Color closed = sf::Color(100,0,80,255);
+static sf::Color opened = sf::Color(100,0,80,80);
 
 Door::Door()
 {
 	body.setFillColor(closed);
+	body.setOutlineColor(closed);
+	body.setOutlineThickness(1);
 	state = true;
 }
 

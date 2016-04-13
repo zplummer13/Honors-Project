@@ -14,7 +14,7 @@ Game::Game() : window(
 			sf::VideoMode(640,480)
 			,"Honors Project"
 			,sf::Style::Default
-			,sf::ContextSettings(0,0,4)
+			,sf::ContextSettings(0,0,0)
 			)
 		, zone()
 {
@@ -253,8 +253,7 @@ void Game::update(sf::Time deltaTime)
 				if (player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
 					player.getBody().getPosition().x < it->getBody().getPosition().x + it->getWidth())
 				{
-					it->operateLinkedDoors();
-					doors = it->getLinkedDoors();
+					doors = it->operateLinkedDoors(doors);
 					it->setState(false);
 				}
 			}
@@ -289,8 +288,8 @@ void Game::update(sf::Time deltaTime)
 				player.setInLight(false);
 			}
 		}
-		else
-		{
+		//else
+		//{
 			if (player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
 				player.getBody().getPosition().y < it->getBody().getPosition().y + it->getHeight())
 			{
@@ -298,9 +297,10 @@ void Game::update(sf::Time deltaTime)
 					player.getBody().getPosition().x < it->getBody().getPosition().x + it->getWidth())
 				{
 					player.setInLight(true);
+					break;
 				}
 			}
-		}
+		//}
 	}
 
 	for(std::vector<Enemy>::iterator it = enemies.begin(); it != enemies.end(); it++)
@@ -333,7 +333,7 @@ void Game::update(sf::Time deltaTime)
 			if (player.getBody().getPosition().x + 20 > winZone.getBody().getPosition().x &&
 			player.getBody().getPosition().x < winZone.getBody().getPosition().x + winZone.getWidth())
 			{
-				if (level.getStage() == 0)
+				if (level.getStage() >= 0 && level.getStage() < 3)
 				{
 					wonLevel = true;
 				}
@@ -347,6 +347,10 @@ void Game::render()
 	if(!gameOver && !wonLevel)
 	{
 		window.draw(zone.getBody());
+		for(std::vector<Light>::iterator it = lights.begin(); it != lights.end(); it++)
+		{
+			window.draw(it->getBody());
+		}
 		for(std::vector<Wall>::iterator it = walls.begin(); it != walls.end(); it++)
 		{
 			window.draw(it->getBody());
@@ -356,10 +360,6 @@ void Game::render()
 			window.draw(it->getBody());
 		}
 		for(std::vector<DoorButton>::iterator it = buttons.begin(); it != buttons.end(); it++)
-		{
-			window.draw(it->getBody());
-		}
-		for(std::vector<Light>::iterator it = lights.begin(); it != lights.end(); it++)
 		{
 			window.draw(it->getBody());
 		}

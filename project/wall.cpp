@@ -4,7 +4,7 @@
 
 Wall::Wall()
 {
-	body.setFillColor(sf::Color::Red);
+	body.setFillColor(sf::Color(200,0,0,255));
 }
 
 void Wall::setPosition(int x, int y)

@@ -55,25 +55,10 @@ bool DoorButton::getState()
 	return state;
 }
 
-void DoorButton::addLinks(std::vector<Door> doors)
-{
-	linkedDoors = doors;
-}
-
-std::vector<Door> DoorButton::getLinkedDoors()
-{
-	return linkedDoors;
-}
-
-void DoorButton::removeLinks()
-{
-	linkedDoors.clear();
-}
-
-void DoorButton::operateLinkedDoors()
+std::vector<Door> DoorButton::operateLinkedDoors(std::vector<Door> doors)
 {
 	int count = 0;
-	for (std::vector<Door>::iterator it = linkedDoors.begin(); it != linkedDoors.end(); it++)
+	for (std::vector<Door>::iterator it = doors.begin(); it != doors.end(); it++)
 	{
 		if (operations[count] == 0)
 		{
@@ -93,6 +78,7 @@ void DoorButton::operateLinkedDoors()
 		}
 		count++;
 	}
+	return doors;
 }
 
 void DoorButton::setOperation(int i, int j)

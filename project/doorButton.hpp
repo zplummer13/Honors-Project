@@ -18,17 +18,13 @@ class DoorButton : public Entity
 		int getWidth();
 		int getHeight();
 		bool getState();
-		void addLinks(std::vector<Door> doors);
-		std::vector<Door> getLinkedDoors();
-		void removeLinks();
-		void operateLinkedDoors();
+		std::vector<Door> operateLinkedDoors(std::vector<Door> doors);
 		void setOperation(int i, int j);
 
 	private:
 		sf::RectangleShape body;
 		int width;
 		int height;
-		std::vector<Door> linkedDoors;
 		int operations [MAXDOORS];
 		bool state;
 

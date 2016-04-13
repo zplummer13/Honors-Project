@@ -6,7 +6,7 @@ Player::Player()
 {
 	body.setRadius(10.f);
 	body.setPosition(16, 200);
-	body.setFillColor(sf::Color::Cyan);
+	body.setFillColor(sf::Color(0,250,250,255));
 	body.setOutlineColor(sf::Color::White);
 	body.setOutlineThickness(1);
 	shadow.setRadius(10.f);

@@ -4,8 +4,8 @@
 
 Light::Light()
 {
-	body.setFillColor(sf::Color(220,220,28,255));
-	body.setOutlineColor(sf::Color(180,180,20,255));
+	body.setFillColor(sf::Color(180,180,20,255));
+	body.setOutlineColor(sf::Color(140,140,14,255));
 	body.setOutlineThickness(5);
 }
 

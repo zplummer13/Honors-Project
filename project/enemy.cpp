@@ -13,7 +13,7 @@ Enemy::Enemy()
 	body.setFillColor(sf::Color(255,255,255,180));
 	behaviorGraph = Graph(MAXSTATES);
 	state = 0;
-	speed = 50.f;
+	speed = 80.f;
 }
 
 void Enemy::move(sf::Vector2f movement)
@@ -93,25 +93,28 @@ void Enemy::update(sf::Time deltaTime)
 	sf::Vector2f direction;
 	if (state == 0) 
 	{
-		direction = sf::Vector2f(0,0);
+		//Does not move in state 0
 	}
-	if (state == 1)
+	else
 	{
-		direction = target - body.getPosition();
+		if (state == 1)
+		{
+			direction = target - body.getPosition();
+		}
+		if (state == 2)
+		{
+			direction = playerTarget - body.getPosition(); 
+		}
+		if (state == 3)
+		{
+			direction = home - body.getPosition(); 
+		}
+		direction = direction / 
+			sqrtf( (direction.x * direction.x) + (direction.y * direction.y) );
+		direction.x = speed * direction.x;
+		direction.y = speed * direction.y;
+		move(direction * deltaTime.asSeconds());
 	}
-	if (state == 2)
-	{
-		direction = playerTarget - body.getPosition(); 
-	}
-	if (state == 3)
-	{
-		direction = home - body.getPosition(); 
-	}
-	direction = direction / 
-		sqrtf( (direction.x * direction.x) + (direction.y * direction.y) );
-	direction.x = speed * direction.x;
-	direction.y = speed * direction.y;
-	move(direction * deltaTime.asSeconds());
 }
 
 void Enemy::setHome(int x, int y)
@@ -134,6 +137,11 @@ sf::Vector2f Enemy::getTarget()
 	return target;
 }
 
+void Enemy::setSpeed(float velocity)
+{
+	speed = velocity;
+}
+
 bool Enemy::checkPositions(sf::Vector2f v1, sf::Vector2f v2)
 {
 	for (int i = -1; i < 2; i++)
@@ -147,5 +155,26 @@ bool Enemy::checkPositions(sf::Vector2f v1, sf::Vector2f v2)
 		}
 	}
 	return false;
+}
+
+void Enemy::setPatrolParameters()
+{
+	setState(1);
+	addEdge(1,3);
+	addEdge(3,1);
+	addEdge(1,2);
+	addEdge(3,2);
+	addEdge(2,3);
+	addEdge(2,2);
+}
+
+void Enemy::setStandingParameters()
+{
+	setState(0);
+	addEdge(3,0);
+	addEdge(0,2);
+	addEdge(3,2);
+	addEdge(2,3);
+	addEdge(2,2);
 }
 

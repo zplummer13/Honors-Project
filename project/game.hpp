@@ -24,6 +24,10 @@ class Game
 		sf::Text gameOverText;
 		bool wonLevel;
 		sf::Text wonLevelText;
+		sf::Text promptReturn;
+		bool paused;
+		sf::Text pausedText;
+		sf::RectangleShape pausedScreen;
 		Player player;
 		Zone zone;
 		

@@ -20,18 +20,32 @@ Game::Game() : window(
 {
 	gameOver = false;
 	wonLevel = false;
+	paused = false;
 
-	if (!font.loadFromFile("OpenSans.ttf")) { /* Nothing */}
-	gameOverText.setString("Game Over!\nPress Return to Restart");
+	if (!font.loadFromFile("j_d_handcrafted/j.d.ttf")) { /* Nothing */}
+	gameOverText.setString("Game Over!");
 	gameOverText.setFont(font);
-	gameOverText.setCharacterSize(30);
-	gameOverText.setPosition(100,200);
+	gameOverText.setCharacterSize(80);
+	gameOverText.setPosition(100,140);
 	gameOverText.setColor(sf::Color::Red);
-	wonLevelText.setString("Level Complete!\nPress Return to Continue");
+	wonLevelText.setString("Level Complete!");
 	wonLevelText.setFont(font);
-	wonLevelText.setCharacterSize(30);
-	wonLevelText.setPosition(100,200);
+	wonLevelText.setCharacterSize(56);
+	wonLevelText.setPosition(100,150);
 	wonLevelText.setColor(sf::Color::Red);
+	promptReturn.setString("Press Return to Continue");
+	promptReturn.setFont(font);
+	promptReturn.setCharacterSize(32);
+	promptReturn.setPosition(100,240);
+	promptReturn.setColor(sf::Color::Red);
+	pausedText.setString("Paused\nPress Return to Continue\nPress Q to Restart\nPress Esc to Quit");
+	pausedText.setFont(font);
+	pausedText.setCharacterSize(30);
+	pausedText.setPosition(100,120);
+	pausedText.setColor(sf::Color::Red);
+	pausedScreen.setPosition(0,0);
+	pausedScreen.setSize(sf::Vector2f(640,480));
+	pausedScreen.setFillColor(sf::Color(0,0,0,180));
 
 	level.initiate();
 	player = level.getPlayer();
@@ -93,26 +107,31 @@ void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 		window.close();
 	}
 
-	if (!gameOver && !wonLevel)
+	if (!gameOver && !wonLevel && !paused)
 	{
-		if (key == sf::Keyboard::W)
+		if (key == sf::Keyboard::W || key == sf::Keyboard::Up)
 		{
 			player.setMovingUp(isPressed);
 		}
 
-		if (key == sf::Keyboard::S)
+		if (key == sf::Keyboard::S || key == sf::Keyboard::Down)
 		{
 			player.setMovingDown(isPressed);
 		}
 
-		if (key == sf::Keyboard::A)
+		if (key == sf::Keyboard::A || key == sf::Keyboard::Left)
 		{
 			player.setMovingLeft(isPressed);
 		}
 
-		if (key == sf::Keyboard::D)
+		if (key == sf::Keyboard::D || key == sf::Keyboard::Right)
 		{
 			player.setMovingRight(isPressed);
+		}
+
+		if (key == sf::Keyboard::P)
+		{
+			paused = true;
 		}
 
 		if (key == sf::Keyboard::Space)
@@ -125,6 +144,25 @@ void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 		if (key == sf::Keyboard::Return)
 		{
 			gameOver = false;
+			level.initiate();
+			player = level.getPlayer();
+			walls = level.getWalls();
+			enemies = level.getEnemies();
+			doors = level.getDoors();
+			buttons = level.getButtons();
+			lights = level.getLights();
+			winZone = level.getWinZone();
+		}
+	}
+	else if (paused)
+	{
+		if (key == sf::Keyboard::Return)
+		{
+			paused = false;
+		}
+		if (key == sf::Keyboard::Q)
+		{
+			paused = false;
 			level.initiate();
 			player = level.getPlayer();
 			walls = level.getWalls();
@@ -156,79 +194,56 @@ void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 
 void Game::update(sf::Time deltaTime)
 {
-	player.advanceCooldowns();
-	sf::Vector2f movement(0.f,0.f);
-	if (player.isMovingUp())
+	if (!paused)
 	{
-		player.setVelocity(movement.x, movement.y - 70.f);
-		movement = player.getVelocity();
-	}
-	if (player.isMovingDown())
-	{
-		player.setVelocity(movement.x, movement.y + 70.f);
-		movement = player.getVelocity();
-	}
-	if (player.isMovingLeft())
-	{
-		player.setVelocity(movement.x - 70.f, movement.y);
-		movement = player.getVelocity();
-	}
-	if (player.isMovingRight())
-	{
-		player.setVelocity(movement.x + 70.f, movement.y);
-		movement = player.getVelocity();
-	}
-
-	player.move(movement * deltaTime.asSeconds());
-
-	sf::Vector2f correctMove(0.f,0.f);
-	if (player.getBody().getPosition().x < zone.getBody().getPosition().x ||
-		player.getBody().getPosition().x > zone.getBody().getPosition().x + 600)
-	{
-		correctMove.x = -1 * movement.x * deltaTime.asSeconds();
-	}
-	if (player.getBody().getPosition().y < zone.getBody().getPosition().y ||
-		player.getBody().getPosition().y > zone.getBody().getPosition().y + 380)
-	{
-		correctMove.y = -1 * movement.y * deltaTime.asSeconds();
-	}
-
-	for(std::vector<Wall>::iterator it = walls.begin(); it != walls.end(); it++)
-	{
-		if(player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
-			player.getBody().getPosition().y < it->getBody().getPosition().y + it->getHeight())
+		player.advanceCooldowns();
+		sf::Vector2f movement(0.f,0.f);
+		if (player.isMovingUp())
 		{
-			if(player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
-				player.getBody().getPosition().x < it->getBody().getPosition().x + it->getWidth())
-			{
-				correctMove.x = -1 * movement.x * deltaTime.asSeconds();
-			}
+			player.setVelocity(movement.x, movement.y - 70.f);
+			movement = player.getVelocity();
 		}
-		if (player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
-			player.getBody().getPosition().x < it->getBody().getPosition().x + it->getWidth())
+		if (player.isMovingDown())
 		{
-			if (player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
+			player.setVelocity(movement.x, movement.y + 70.f);
+			movement = player.getVelocity();
+		}
+		if (player.isMovingLeft())
+		{
+			player.setVelocity(movement.x - 70.f, movement.y);
+			movement = player.getVelocity();
+		}
+		if (player.isMovingRight())
+		{
+			player.setVelocity(movement.x + 70.f, movement.y);
+			movement = player.getVelocity();
+		}
+
+		player.move(movement * deltaTime.asSeconds());
+
+		sf::Vector2f correctMove(0.f,0.f);
+		if (player.getBody().getPosition().x < zone.getBody().getPosition().x ||
+			player.getBody().getPosition().x > zone.getBody().getPosition().x + 600)
+		{
+			correctMove.x = -1 * movement.x * deltaTime.asSeconds();
+		}
+		if (player.getBody().getPosition().y < zone.getBody().getPosition().y ||
+			player.getBody().getPosition().y > zone.getBody().getPosition().y + 380)
+		{
+			correctMove.y = -1 * movement.y * deltaTime.asSeconds();
+		}
+
+		for(std::vector<Wall>::iterator it = walls.begin(); it != walls.end(); it++)
+		{
+			if(player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
 				player.getBody().getPosition().y < it->getBody().getPosition().y + it->getHeight())
 			{
-				correctMove.y = -1 * movement.y * deltaTime.asSeconds();
-			}
-		}
-	}
-
-	for(std::vector<Door>::iterator it = doors.begin(); it != doors.end(); it++)
-	{
-		if (it->getState())
-		{
-			if (player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
-				player.getBody().getPosition().y < it->getBody().getPosition().y + it->getHeight())
-			{
-				if (player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
+				if(player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
 					player.getBody().getPosition().x < it->getBody().getPosition().x + it->getWidth())
 				{
 					correctMove.x = -1 * movement.x * deltaTime.asSeconds();
 				}
 			}
-
 			if (player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
 				player.getBody().getPosition().x < it->getBody().getPosition().x + it->getWidth())
 			{
@@ -239,57 +254,80 @@ void Game::update(sf::Time deltaTime)
 				}
 			}
 		}
-	}
 
-	player.move(correctMove);
-
-	for(std::vector<DoorButton>::iterator it = buttons.begin(); it != buttons.end(); it++)
-	{
-		if (it->getState())
+		for(std::vector<Door>::iterator it = doors.begin(); it != doors.end(); it++)
 		{
-			if (player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
-				player.getBody().getPosition().y < it->getBody().getPosition().y + it->getHeight())
+			if (it->getState())
 			{
+				if (player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
+					player.getBody().getPosition().y < it->getBody().getPosition().y + it->getHeight())
+				{
+					if (player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
+						player.getBody().getPosition().x < it->getBody().getPosition().x + it->getWidth())
+					{
+						correctMove.x = -1 * movement.x * deltaTime.asSeconds();
+					}
+				}
+
 				if (player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
 					player.getBody().getPosition().x < it->getBody().getPosition().x + it->getWidth())
 				{
-					doors = it->operateLinkedDoors(doors);
-					it->setState(false);
+					if (player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
+						player.getBody().getPosition().y < it->getBody().getPosition().y + it->getHeight())
+					{
+						correctMove.y = -1 * movement.y * deltaTime.asSeconds();
+					}
 				}
 			}
 		}
-		else
-		{
-			if (player.getBody().getPosition().y + 20 < it->getBody().getPosition().y ||
-				player.getBody().getPosition().y > it->getBody().getPosition().y + it->getHeight())
-			{
-				it->setState(true);
-			}
-			if (player.getBody().getPosition().x + 20 < it->getBody().getPosition().x ||
-				player.getBody().getPosition().x > it->getBody().getPosition().x + it->getWidth())
-			{
-				it->setState(true);
-			}
-		}
-	}
 
-	for(std::vector<Light>::iterator it = lights.begin(); it != lights.end(); it++)
-	{
-		if(player.isInLight())
+		player.move(correctMove);
+
+		for(std::vector<DoorButton>::iterator it = buttons.begin(); it != buttons.end(); it++)
 		{
-			if (player.getBody().getPosition().y + 20 < it->getBody().getPosition().y ||
-				player.getBody().getPosition().y > it->getBody().getPosition().y + it->getHeight())
+			if (it->getState())
 			{
-				player.setInLight(false);
+				if (player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
+					player.getBody().getPosition().y < it->getBody().getPosition().y + it->getHeight())
+				{
+					if (player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
+						player.getBody().getPosition().x < it->getBody().getPosition().x + it->getWidth())
+					{
+						doors = it->operateLinkedDoors(doors);
+						it->setState(false);
+					}
+				}
 			}
-			if (player.getBody().getPosition().x + 20 < it->getBody().getPosition().x ||
-				player.getBody().getPosition().x > it->getBody().getPosition().x + it->getWidth())
+			else
 			{
-				player.setInLight(false);
+				if (player.getBody().getPosition().y + 20 < it->getBody().getPosition().y ||
+					player.getBody().getPosition().y > it->getBody().getPosition().y + it->getHeight())
+				{
+					it->setState(true);
+				}
+				if (player.getBody().getPosition().x + 20 < it->getBody().getPosition().x ||
+					player.getBody().getPosition().x > it->getBody().getPosition().x + it->getWidth())
+				{
+					it->setState(true);
+				}
 			}
 		}
-		//else
-		//{
+
+		for(std::vector<Light>::iterator it = lights.begin(); it != lights.end(); it++)
+		{
+			if(player.isInLight())
+			{
+				if (player.getBody().getPosition().y + 20 < it->getBody().getPosition().y ||
+					player.getBody().getPosition().y > it->getBody().getPosition().y + it->getHeight())
+				{
+					player.setInLight(false);
+				}
+				if (player.getBody().getPosition().x + 20 < it->getBody().getPosition().x ||
+					player.getBody().getPosition().x > it->getBody().getPosition().x + it->getWidth())
+				{
+					player.setInLight(false);
+				}
+			}
 			if (player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
 				player.getBody().getPosition().y < it->getBody().getPosition().y + it->getHeight())
 			{
@@ -300,45 +338,45 @@ void Game::update(sf::Time deltaTime)
 					break;
 				}
 			}
-		//}
-	}
-
-	for(std::vector<Enemy>::iterator it = enemies.begin(); it != enemies.end(); it++)
-	{
-		it->script(player);
-		it->update(deltaTime);
-
-		if (player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
-			player.getBody().getPosition().y < it->getBody().getPosition().y + 55)
-		{
-			if (player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
-				player.getBody().getPosition().x < it->getBody().getPosition().x + 55)
-			{
-				gameOver = true;
-			}
 		}
-		if (player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
-			player.getBody().getPosition().x < it->getBody().getPosition().x + 55)
+
+		for(std::vector<Enemy>::iterator it = enemies.begin(); it != enemies.end(); it++)
 		{
+			it->script(player);
+			it->update(deltaTime);
+
 			if (player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
 				player.getBody().getPosition().y < it->getBody().getPosition().y + 55)
 			{
-				gameOver = true;
+				if (player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
+					player.getBody().getPosition().x < it->getBody().getPosition().x + 55)
+				{
+					gameOver = true;
+				}
+			}
+			if (player.getBody().getPosition().x + 20 > it->getBody().getPosition().x &&
+				player.getBody().getPosition().x < it->getBody().getPosition().x + 55)
+			{
+				if (player.getBody().getPosition().y + 20 > it->getBody().getPosition().y &&
+					player.getBody().getPosition().y < it->getBody().getPosition().y + 55)
+				{
+					gameOver = true;
+				}
 			}
 		}
-	}
-	if (player.getBody().getPosition().y + 20 > winZone.getBody().getPosition().y &&
+		if (player.getBody().getPosition().y + 20 > winZone.getBody().getPosition().y &&
 			player.getBody().getPosition().y < winZone.getBody().getPosition().y + winZone.getHeight())
 		{
 			if (player.getBody().getPosition().x + 20 > winZone.getBody().getPosition().x &&
 			player.getBody().getPosition().x < winZone.getBody().getPosition().x + winZone.getWidth())
 			{
-				if (level.getStage() >= 0 && level.getStage() < 3)
+				if (level.getStage() >= 0 && level.getStage() < MAXLEVEL)
 				{
 					wonLevel = true;
 				}
 			}
 		}
+	}
 }
 
 void Game::render()
@@ -371,14 +409,21 @@ void Game::render()
 		{
 			window.draw(it->getBody());
 		}
+		if (paused)
+		{
+			window.draw(pausedScreen);
+			window.draw(pausedText);
+		}
 	}
 	if(gameOver)
 	{
 		window.draw(gameOverText);
+		window.draw(promptReturn);
 	}
 	if(wonLevel)
 	{
 		window.draw(wonLevelText);
+		window.draw(promptReturn);
 	}
 	window.display();
 }

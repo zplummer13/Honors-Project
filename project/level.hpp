@@ -10,6 +10,8 @@
 #include "winZone.hpp"
 #include "light.hpp"
 
+#define MAXLEVEL 4
+
 class Level
 {
 	public:

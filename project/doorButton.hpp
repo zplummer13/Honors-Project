@@ -4,7 +4,7 @@
 #include "entity.hpp"
 #include "door.hpp"
 
-#define MAXDOORS 8
+#define MAXDOORS 9
 
 class DoorButton : public Entity
 {

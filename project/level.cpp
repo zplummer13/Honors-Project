@@ -174,6 +174,183 @@ void Level::initiate()
 		enemies.push_back(enemy4);
 	}
 
+	else if (stage == 3)
+	{
+		Wall wall0; Wall wall1; Wall wall2; Wall wall3;
+		Wall wall4; Wall wall5; Wall wall6; Wall wall7;
+		Wall wall8; Wall wall9; Wall wall10; Wall wall11;
+		Wall wall12; Wall wall13;
+
+		wall0.setParameters(90,60,20,100);
+		wall1.setParameters(240,60,20,100);
+		wall2.setParameters(390,60,20,100);
+		wall3.setParameters(540,60,20,100);
+
+		wall4.setParameters(90,250,20,100);
+		wall5.setParameters(240,250,20,100);
+		wall6.setParameters(390,250,20,100);
+		wall7.setParameters(540,250,20,100);
+
+		wall8.setParameters(10,140,90,20);
+		wall9.setParameters(10,250,90,20);
+		wall10.setParameters(560,140,70,20);
+		wall11.setParameters(560,250,70,20);
+
+		wall12.setParameters(90,40,470,20);
+		wall13.setParameters(90,350,470,20);
+
+		walls.push_back(wall0);
+		walls.push_back(wall1);
+		walls.push_back(wall2);
+		walls.push_back(wall3);
+		walls.push_back(wall4);
+		walls.push_back(wall5);
+		walls.push_back(wall6);
+		walls.push_back(wall7);
+		walls.push_back(wall8);
+		walls.push_back(wall9);
+		walls.push_back(wall10);
+		walls.push_back(wall11);
+		walls.push_back(wall12);
+		walls.push_back(wall13);
+
+		Door door0; Door door1; Door door2;
+		Door door3; Door door4; Door door5;
+		Door door6; Door door7; Door door8;
+		door0.setParameters(110,140,130,20);
+		door1.setParameters(260,140,130,20);
+		door2.setParameters(410,140,130,20);
+		door3.setParameters(110,250,130,20);
+		door4.setParameters(260,250,130,20);
+		door5.setParameters(410,250,130,20);
+		door6.setParameters(240,160,20,90);
+		door7.setParameters(390,160,20,90);
+		door8.setParameters(540,160,20,90);
+
+		doors.push_back(door0);
+		doors.push_back(door1);
+		doors.push_back(door2);
+		doors.push_back(door3);
+		doors.push_back(door4);
+		doors.push_back(door5);
+		doors.push_back(door6);
+		doors.push_back(door7);
+		doors.push_back(door8);
+
+		DoorButton button0; DoorButton button1; DoorButton button2;
+		DoorButton button3; DoorButton button4; DoorButton button5;
+		DoorButton button6; DoorButton button7; DoorButton button8;
+
+		button0.setParameters(165,85,20,20);
+		button1.setParameters(315,85,20,20);
+		button2.setParameters(465,85,20,20);
+		button3.setParameters(165,195,20,20);
+		button4.setParameters(315,195,20,20);
+		button5.setParameters(465,195,20,20);
+		button6.setParameters(165,305,20,20);
+		button7.setParameters(315,305,20,20);
+		button8.setParameters(465,305,20,20);
+
+		button0.setOperation(0,0);
+		button0.setOperation(1,0);
+		button0.setOperation(2,1);
+		button0.setOperation(3,0);
+		button0.setOperation(4,1);
+		button0.setOperation(5,0);
+		button0.setOperation(6,1);
+		button0.setOperation(7,0);
+		button0.setOperation(8,1);
+
+		button1.setOperation(0,1);
+		button1.setOperation(1,0);
+		button1.setOperation(2,1);
+		button1.setOperation(3,1);
+		button1.setOperation(4,1);
+		button1.setOperation(5,1);
+		button1.setOperation(6,3);
+		button1.setOperation(7,0);
+		button1.setOperation(8,3);
+
+		button2.setOperation(0,0);
+		button2.setOperation(1,1);
+		button2.setOperation(2,0);
+		button2.setOperation(3,1);
+		button2.setOperation(4,0);
+		button2.setOperation(5,1);
+		button2.setOperation(6,0);
+		button2.setOperation(7,1);
+		button2.setOperation(8,1);
+
+		button3.setOperation(0,1);
+		button3.setOperation(1,1);
+		button3.setOperation(2,1);
+		button3.setOperation(3,1);
+		button3.setOperation(4,0);
+		button3.setOperation(5,1);
+		button3.setOperation(6,2);
+		button3.setOperation(7,1);
+		button3.setOperation(8,1);
+
+		button4.setOperation(0,1);
+		button4.setOperation(1,0);
+		button4.setOperation(2,1);
+		button4.setOperation(3,1);
+		button4.setOperation(4,1);
+		button4.setOperation(5,1);
+		button4.setOperation(6,0);
+		button4.setOperation(7,1);
+		button4.setOperation(8,1);
+
+		button5.setOperation(0,1);
+		button5.setOperation(1,1);
+		button5.setOperation(2,1);
+		button5.setOperation(3,0);
+		button5.setOperation(4,0);
+		button5.setOperation(5,1);
+		button5.setOperation(6,1);
+		button5.setOperation(7,1);
+		button5.setOperation(8,1);
+
+		button6.setOperation(0,1);
+		button6.setOperation(1,0);
+		button6.setOperation(2,0);
+		button6.setOperation(3,0);
+		button6.setOperation(4,1);
+		button6.setOperation(5,1);
+		button6.setOperation(6,1);
+		button6.setOperation(7,1);
+		button6.setOperation(8,1);
+
+		button7.setOperation(0,3);
+		button7.setOperation(1,3);
+		button7.setOperation(2,3);
+		button7.setOperation(3,3);
+		button7.setOperation(4,3);
+		button7.setOperation(5,3);
+		button7.setOperation(6,2);
+		button7.setOperation(7,3);
+		button7.setOperation(8,2);
+
+		button8.setOperation(0,3);
+		button8.setOperation(1,3);
+		button8.setOperation(2,3);
+		button8.setOperation(3,3);
+		button8.setOperation(4,3);
+		button8.setOperation(5,0);
+		button8.setOperation(6,2);
+		button8.setOperation(7,2);
+		button8.setOperation(8,1);
+
+		buttons.push_back(button0);
+		buttons.push_back(button1);
+		buttons.push_back(button2);
+		buttons.push_back(button3);
+		buttons.push_back(button4);
+		buttons.push_back(button5);
+		buttons.push_back(button6);
+		buttons.push_back(button7);
+		buttons.push_back(button8);
+	}
 	else
 	{
 		//blank stage for any number past the created stages

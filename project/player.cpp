@@ -54,7 +54,7 @@ void Player::advanceCooldowns()
 	if (shadowCooldown > 0)
 	{
 		shadowCooldown--;
-		shadowBar.setSize(sf::Vector2f(620 - 620*(shadowCooldown/300),20));
+		shadowBar.setSize(sf::Vector2f(620 - 620*(shadowCooldown/200),20));
 	}
 }
 
@@ -66,7 +66,7 @@ void Player::swap()
 		float y = shadow.getPosition().y;
 		shadow.setPosition(body.getPosition().x,body.getPosition().y);
 		body.setPosition(x,y);
-		shadowCooldown = 300;
+		shadowCooldown = 200;
 		shadowBar.setSize(sf::Vector2f(0,20));
 	}
 }

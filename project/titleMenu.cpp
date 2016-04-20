@@ -3,7 +3,7 @@
 
 TitleMenu::TitleMenu()
 {
-	onMenu = false;//true;
+	onMenu = true;
 	screen = 0;
 	cooldown = 0;
 	setTexts();

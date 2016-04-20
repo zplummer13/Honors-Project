@@ -9,7 +9,7 @@
 
 Level::Level()
 {
-	setStage(4);
+	setStage(0);
 }
 
 void Level::initiate()

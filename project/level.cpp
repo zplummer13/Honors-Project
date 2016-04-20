@@ -9,7 +9,7 @@
 
 Level::Level()
 {
-	setStage(0);
+	setStage(4);
 }
 
 void Level::initiate()
@@ -86,7 +86,6 @@ void Level::initiate()
 		enemy0.setPatrolParameters();
 		enemies.push_back(enemy0);
 	}
-	
 	else if (stage == 1)
 	{
 		Light light0;
@@ -173,7 +172,6 @@ void Level::initiate()
 		enemies.push_back(enemy3);
 		enemies.push_back(enemy4);
 	}
-
 	else if (stage == 3)
 	{
 		Wall wall0; Wall wall1; Wall wall2; Wall wall3;
@@ -350,6 +348,32 @@ void Level::initiate()
 		buttons.push_back(button6);
 		buttons.push_back(button7);
 		buttons.push_back(button8);
+	}
+	else if (stage == 4)
+	{
+		Wall wall0;
+		Wall wall1;
+		Wall wall2;
+		Wall wall3;
+		Wall wall4;
+		Wall wall5;
+		Wall wall6;
+		wall0.setParameters(10,250,90,20);
+		wall1.setParameters(80,150,20,100);
+		wall2.setParameters(80,70,200,20);
+		wall3.setParameters(170,90,20,100);
+		wall4.setParameters(260,90,20,180);
+		wall5.setParameters(170,270,20,80);
+		wall6.setParameters(80,330,260,20);
+
+		walls.push_back(wall0);
+		walls.push_back(wall1);
+		walls.push_back(wall2);
+		walls.push_back(wall3);
+		walls.push_back(wall4);
+		walls.push_back(wall5);
+		walls.push_back(wall6);
+
 	}
 	else
 	{

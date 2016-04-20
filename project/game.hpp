@@ -11,6 +11,7 @@
 #include "enemy.hpp"
 #include "light.hpp"
 #include "winZone.hpp"
+#include "titleMenu.hpp"
 
 class Game 
 {
@@ -39,6 +40,9 @@ class Game
 		std::vector<Light> lights;
 		WinZone winZone;
 		sf::Font font;
+
+		TitleMenu titleMenu;
+		std::vector<sf::Text> titleTexts;
 
 		void processEvents();
 		void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);

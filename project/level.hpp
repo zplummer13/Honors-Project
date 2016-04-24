@@ -10,7 +10,7 @@
 #include "winZone.hpp"
 #include "light.hpp"
 
-#define MAXLEVEL 5
+#define MAXLEVEL 6
 
 class Level
 {

@@ -358,13 +358,21 @@ void Level::initiate()
 		Wall wall4;
 		Wall wall5;
 		Wall wall6;
+		Wall wall7;
+		Wall wall8;
+		Wall wall9;
+		Wall wall10;
 		wall0.setParameters(10,250,90,20);
 		wall1.setParameters(80,150,20,100);
-		wall2.setParameters(80,70,200,20);
+		wall2.setParameters(80,70,370,20);
 		wall3.setParameters(170,90,20,100);
 		wall4.setParameters(260,90,20,180);
 		wall5.setParameters(170,270,20,80);
-		wall6.setParameters(80,330,260,20);
+		wall6.setParameters(80,330,270,20);
+		wall7.setParameters(350,250,20,100);
+		wall8.setParameters(350,170,100,20);
+		wall9.setParameters(450,330,80,20);
+		wall10.setParameters(530,70,20,280);
 
 		walls.push_back(wall0);
 		walls.push_back(wall1);
@@ -373,7 +381,272 @@ void Level::initiate()
 		walls.push_back(wall4);
 		walls.push_back(wall5);
 		walls.push_back(wall6);
+		walls.push_back(wall7);
+		walls.push_back(wall8);
+		walls.push_back(wall9);
+		walls.push_back(wall10);
 
+		Door door0;
+		Door door1;
+		Door door2;
+		Door door3;
+		Door door4;
+		Door door5;
+		Door door6;
+		door0.setParameters(280,170,70,20);
+		door1.setParameters(260,10,20,60);
+		door2.setParameters(430,90,20,80);
+		door3.setParameters(550,70,80,20);
+		door4.setParameters(550,130,80,20);
+		door5.setParameters(550,270,80,20);
+		door6.setParameters(550,330,80,20);
+		doors.push_back(door0);
+		doors.push_back(door1);
+		doors.push_back(door2);
+		doors.push_back(door3);
+		doors.push_back(door4);
+		doors.push_back(door5);
+		doors.push_back(door6);
+
+		Light light0;
+		Light light1;
+		Light light2;
+		Light light3;
+		light0.setParameters(205,90,40,40);
+		light1.setParameters(15,370,35,35);
+		light2.setParameters(490,290,40,40);
+		light3.setParameters(280,90,40,40);
+
+		lights.push_back(light0);
+		lights.push_back(light1);
+		lights.push_back(light2);
+		lights.push_back(light3);
+
+		DoorButton button0;
+		DoorButton button1;
+		DoorButton button2;
+		DoorButton button3;
+
+		button0.setParameters(215,100,20,20);
+		button1.setParameters(20,380,20,20);
+		button2.setParameters(500,300,20,20);
+		button3.setParameters(290,100,20,20);
+
+		button0.setOperation(0,0);
+		button0.setOperation(1,1);
+		button0.setOperation(2,1);
+		button0.setOperation(3,1);
+		button0.setOperation(4,1);
+		button0.setOperation(5,1);
+		button0.setOperation(6,1);
+
+		button1.setOperation(0,1);
+		button1.setOperation(1,0);
+		button1.setOperation(2,0);
+		button1.setOperation(3,1);
+		button1.setOperation(4,1);
+		button1.setOperation(5,1);
+		button1.setOperation(6,1);
+
+		button2.setOperation(0,1);
+		button2.setOperation(1,1);
+		button2.setOperation(2,1);
+		button2.setOperation(3,0);
+		button2.setOperation(4,1);
+		button2.setOperation(5,0);
+		button2.setOperation(6,1);
+
+		button3.setOperation(0,1);
+		button3.setOperation(1,1);
+		button3.setOperation(2,1);
+		button3.setOperation(3,1);
+		button3.setOperation(4,0);
+		button3.setOperation(5,1);
+		button3.setOperation(6,0);
+
+		buttons.push_back(button0);
+		buttons.push_back(button1);
+		buttons.push_back(button2);
+		buttons.push_back(button3);
+
+		Enemy enemy0;
+		enemy0.setPosition(400,10);
+		enemy0.setHome(470,10);
+		enemy0.setTarget(130,10);
+		enemy0.setPatrolParameters();
+
+		Enemy enemy1;
+		enemy1.setPosition(150,350);
+		enemy1.setHome(460,350);
+		enemy1.setTarget(20,350);
+		enemy1.setPatrolParameters();
+
+		Enemy enemy2;
+		enemy2.setPosition(90,100);
+		enemy2.setHome(90,100);
+		enemy2.setTarget(490,280);
+		enemy2.setPatrolParameters();
+
+		enemies.push_back(enemy0);
+		enemies.push_back(enemy1);
+		enemies.push_back(enemy2);
+
+	}
+	else if (stage == 5)
+	{
+		Light light0;  Light light1;  Light light2;  Light light3;
+		Light light4;  Light light5;  Light light6;
+		Light light7;  Light light8;  Light light9;  Light light10;
+		Light light11; Light light12; Light light13;
+		Light light14; Light light15; Light light16; Light light17;
+		Light light18; Light light19; Light light20;
+		Light light21; Light light22; Light light23; Light light24;
+		Light light25; Light light26; Light light27;
+		Light light28; Light light29; Light light30; Light light31;
+		Light light32; Light light33; Light light34;
+		Light light35; Light light36; Light light37; Light light38;
+
+		light0.setParameters(50,35,50,50);
+		light1.setParameters(50,135,50,50);
+		light2.setParameters(50,235,50,50);
+		light3.setParameters(50,335,50,50);
+		light4.setParameters(100,85,50,50);
+		light5.setParameters(100,185,50,50);
+		light6.setParameters(100,285,50,50);
+
+		light7.setParameters(150,35,50,50);
+		light8.setParameters(150,135,50,50);
+		light9.setParameters(150,235,50,50);
+		light10.setParameters(150,335,50,50);
+		light11.setParameters(200,85,50,50);
+		light12.setParameters(200,185,50,50);
+		light13.setParameters(200,285,50,50);
+
+		light14.setParameters(250,35,50,50);
+		light15.setParameters(250,135,50,50);
+		light16.setParameters(250,235,50,50);
+		light17.setParameters(250,335,50,50);
+		light18.setParameters(300,85,50,50);
+		light19.setParameters(300,185,50,50);
+		light20.setParameters(300,285,50,50);
+
+		light21.setParameters(350,35,50,50);
+		light22.setParameters(350,135,50,50);
+		light23.setParameters(350,235,50,50);
+		light24.setParameters(350,335,50,50);
+		light25.setParameters(400,85,50,50);
+		light26.setParameters(400,185,50,50);
+		light27.setParameters(400,285,50,50);
+
+		light28.setParameters(450,35,50,50);
+		light29.setParameters(450,135,50,50);
+		light30.setParameters(450,235,50,50);
+		light31.setParameters(450,335,50,50);
+		light32.setParameters(500,85,50,50);
+		light33.setParameters(500,185,50,50);
+		light34.setParameters(500,285,50,50);
+
+		light35.setParameters(550,35,50,50);
+		light36.setParameters(550,135,50,50);
+		light37.setParameters(550,235,50,50);
+		light38.setParameters(550,335,50,50);
+
+		lights.push_back(light0);
+		lights.push_back(light1);
+		lights.push_back(light2);
+		lights.push_back(light3);
+		lights.push_back(light4);
+		lights.push_back(light5);
+		lights.push_back(light6);
+		lights.push_back(light7);
+		lights.push_back(light8);
+		lights.push_back(light9);
+		lights.push_back(light10);
+		lights.push_back(light11);
+		lights.push_back(light12);
+		lights.push_back(light13);
+		lights.push_back(light14);
+		lights.push_back(light15);
+		lights.push_back(light16);
+		lights.push_back(light17);
+		lights.push_back(light18);
+		lights.push_back(light19);
+		lights.push_back(light20);
+		lights.push_back(light21);
+		lights.push_back(light22);
+		lights.push_back(light23);
+		lights.push_back(light24);
+		lights.push_back(light25);
+		lights.push_back(light26);
+		lights.push_back(light27);
+		lights.push_back(light28);
+		lights.push_back(light29);
+		lights.push_back(light30);
+		lights.push_back(light31);
+		lights.push_back(light32);
+		lights.push_back(light33);
+		lights.push_back(light34);
+		lights.push_back(light35);
+		lights.push_back(light36);
+		lights.push_back(light37);
+		lights.push_back(light38);
+
+		Enemy enemy0;
+		enemy0.setPosition(-60,-60);
+		enemy0.setHome(-60,-60);
+		enemy0.setTarget(10,10);
+		enemy0.setStandingParameters();
+
+		Enemy enemy1;
+		enemy1.setPosition(300,-60);
+		enemy1.setHome(300,-60);
+		enemy1.setTarget(10,10);
+		enemy1.setStandingParameters();
+
+		Enemy enemy2;
+		enemy2.setPosition(600,-60);
+		enemy2.setHome(600,-60);
+		enemy2.setTarget(10,10);
+		enemy2.setStandingParameters();
+
+		Enemy enemy3;
+		enemy3.setPosition(-60,490);
+		enemy3.setHome(-60,490);
+		enemy3.setTarget(10,10);
+		enemy3.setStandingParameters();
+
+		Enemy enemy4;
+		enemy4.setPosition(300,490);
+		enemy4.setHome(300,490);
+		enemy4.setTarget(10,10);
+		enemy4.setStandingParameters();
+
+		Enemy enemy5;
+		enemy5.setPosition(600,490);
+		enemy5.setHome(600,490);
+		enemy5.setTarget(10,10);
+		enemy5.setStandingParameters();
+
+		Enemy enemy6;
+		enemy6.setPosition(660,190);
+		enemy6.setHome(660,190);
+		enemy6.setTarget(10,10);
+		enemy6.setStandingParameters();
+
+		Enemy enemy7;
+		enemy7.setPosition(10,10);
+		enemy7.setHome(10,10);
+		enemy7.setTarget(10,400);
+		enemy7.setPatrolParameters();
+
+		enemies.push_back(enemy0);
+		enemies.push_back(enemy1);
+		enemies.push_back(enemy2);
+		enemies.push_back(enemy3);
+		enemies.push_back(enemy4);
+		enemies.push_back(enemy5);
+		enemies.push_back(enemy6);
+		enemies.push_back(enemy7);
 	}
 	else
 	{

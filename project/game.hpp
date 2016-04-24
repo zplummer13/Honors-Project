@@ -29,6 +29,9 @@ class Game
 		bool paused;
 		sf::Text pausedText;
 		sf::RectangleShape pausedScreen;
+		bool won;
+		sf::Text wonText;
+		sf::Text promptWon;
 		Player player;
 		Zone zone;
 		

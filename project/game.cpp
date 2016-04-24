@@ -21,6 +21,7 @@ Game::Game() : window(
 	gameOver = false;
 	wonLevel = false;
 	paused = false;
+	won = false;
 
 	if (!font.loadFromFile("j_d_handcrafted/j.d.ttf")) { /* Nothing */}
 	gameOverText.setString("Game Over!");
@@ -46,6 +47,16 @@ Game::Game() : window(
 	pausedScreen.setPosition(0,0);
 	pausedScreen.setSize(sf::Vector2f(640,480));
 	pausedScreen.setFillColor(sf::Color(0,0,0,180));
+	wonText.setString("Congrats!\nYou won!");
+	wonText.setFont(font);
+	wonText.setCharacterSize(80);
+	wonText.setPosition(130,100);
+	wonText.setColor(sf::Color::Red);
+	promptWon.setString("Press M to go the Menu");
+	promptWon.setFont(font);
+	promptWon.setCharacterSize(30);
+	promptWon.setPosition(130,360);
+	promptWon.setColor(sf::Color::Red);
 
 	titleTexts = titleMenu.getTexts();
 
@@ -109,7 +120,7 @@ void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 		window.close();
 	}
 
-	if (!gameOver && !wonLevel && !paused && !titleMenu.getOnMenu())
+	if (!gameOver && !wonLevel && !paused && !titleMenu.getOnMenu() && !won)
 	{
 		if (key == sf::Keyboard::W || key == sf::Keyboard::Up)
 		{
@@ -200,6 +211,25 @@ void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 			titleMenu.setCooldown(40);
 		}
 	}
+	else if (won)
+	{
+		if (key == sf::Keyboard::M)
+		{
+			won = false;
+			titleMenu.setOnMenu(true);
+			titleMenu.setScreen(0);
+			titleTexts = titleMenu.getTexts();
+			level.setStage(0);
+			level.initiate();
+			player = level.getPlayer();
+			walls = level.getWalls();
+			enemies = level.getEnemies();
+			doors = level.getDoors();
+			buttons = level.getButtons();
+			lights = level.getLights();
+			winZone = level.getWinZone();
+		}
+	}
 	else
 	{
 		if (key == sf::Keyboard::Return)
@@ -214,6 +244,10 @@ void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 			buttons = level.getButtons();
 			lights = level.getLights();
 			winZone = level.getWinZone();
+			if (level.getStage() == MAXLEVEL)
+			{
+				won = true;
+			}
 		}
 	}
 
@@ -225,7 +259,7 @@ void Game::update(sf::Time deltaTime)
 	{
 		titleMenu.setCooldown(titleMenu.getCooldown() - 1);
 	}
-	if (!paused && !titleMenu.getOnMenu())
+	if (!paused && !titleMenu.getOnMenu() && !gameOver && !won)
 	{
 		player.advanceCooldowns();
 		sf::Vector2f movement(0.f,0.f);
@@ -413,7 +447,7 @@ void Game::update(sf::Time deltaTime)
 void Game::render()
 {
 	window.clear();
-	if(!gameOver && !wonLevel && !titleMenu.getOnMenu())
+	if(!gameOver && !wonLevel && !titleMenu.getOnMenu() && !won)
 	{
 		window.draw(zone.getBody());
 		for(std::vector<Light>::iterator it = lights.begin(); it != lights.end(); it++)
@@ -462,6 +496,11 @@ void Game::render()
 	{
 		window.draw(wonLevelText);
 		window.draw(promptReturn);
+	}
+	if(won)
+	{
+		window.draw(wonText);
+		window.draw(promptWon);
 	}
 	window.display();
 }

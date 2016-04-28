@@ -259,7 +259,7 @@ void Game::update(sf::Time deltaTime)
 	{
 		titleMenu.setCooldown(titleMenu.getCooldown() - 1);
 	}
-	if (!paused && !titleMenu.getOnMenu() && !gameOver && !won)
+	if (!paused && !titleMenu.getOnMenu() && !gameOver && !won && !wonLevel)
 	{
 		player.advanceCooldowns();
 		sf::Vector2f movement(0.f,0.f);
